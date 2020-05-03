@@ -19,12 +19,12 @@ The following files were created to run the Mission-to-Mars web app:
 
 ### Results
 The following is a screenshot of the front-end of the Mission-to-Mars webapp:
-[!](https://github.com/karenbennis/Mission-to-Mars/blob/master/FrontEndApppng.png)
+![](https://github.com/karenbennis/Mission-to-Mars/blob/master/FrontEndApppng.png)
 
 Note that the featured image and mars facts section are refreshed dynamically during scraping.
 
 The following is a screenshot of the back-end of the Mission-to-Mars webapp:
-[!](https://github.com/karenbennis/Mission-to-Mars/blob/master/MongoDBCompassCommunity.png)
+![](https://github.com/karenbennis/Mission-to-Mars/blob/master/MongoDBCompassCommunity.png)
 
 This confirms that the scraped data is indeed being stored in MongoDB.
 
