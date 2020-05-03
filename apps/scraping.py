@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding: utf-8
 
-# Import Splinter and BeautifulSoup
+# Import dependencies
 from splinter import Browser
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -130,9 +130,7 @@ def mars_hemispheres(browser):
     # Find and click each of the hemisphere image buttons
     for entry in range(4):
         browser.find_by_tag('h3')[entry].click()
-        
-
-
+  
         # Parse the resulting html with soup
         html = browser.html
         hemisphere_img0 = BeautifulSoup(html, 'html.parser')
@@ -151,8 +149,6 @@ def mars_hemispheres(browser):
     hemisphere_dict=[{'title':hemisphere_titles[entry].text, 'img_url':hemisphere_img_urls[entry]} for entry in range(4)] 
     
     return hemisphere_dict
-
-
 
 if __name__ == "__main__":
     # If running as script, print scraped data
