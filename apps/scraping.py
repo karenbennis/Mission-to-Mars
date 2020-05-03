@@ -136,18 +136,18 @@ def mars_hemispheres(browser):
         # Parse the resulting html with soup
         html = browser.html
         hemisphere_img0 = BeautifulSoup(html, 'html.parser')
-        # Drill down through the tags
+        # Drill down through each of the tags
         hemisphere_img1 = hemisphere_img0.find('ul')
         hemisphere_img2 = hemisphere_img1.find('li')
         hemisphere_img = hemisphere_img2.find('a')['href']
 
-        # Build image links list
+        # Build image links list now that we have the complete link
         hemisphere_img_urls.append(hemisphere_img)
 
        # Click back to land on the main page with hemisphere buttons
         browser.back()
 
-    #for entry in range(4):
+    # create list of dictionaries so that each hemisphere has a title and image url
     hemisphere_dict=[{'title':hemisphere_titles[entry].text, 'img_url':hemisphere_img_urls[entry]} for entry in range(4)] 
     
     return hemisphere_dict
