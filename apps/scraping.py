@@ -9,7 +9,7 @@ import datetime as dt
 
 # Set the executable path and initialize the chrome browser in splinter
 executable_path = {'executable_path': 'chromedriver'}
-#browser = Browser('chrome', **executable_path)
+browser = Browser('chrome', **executable_path)
 
 def scrape_all():
 
@@ -24,8 +24,10 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
+      "hemispheres": mars_hemispheres(browser),
       "last_modified": dt.datetime.now()
     }
+    browser.quit()
     return data
 
 
@@ -93,37 +95,6 @@ def featured_image(browser):
     img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
     return img_url
 
-def featured_image(browser):
-
-    # Visit URL
-    url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
-    browser.visit(url)
-
-    # Find and click the full image button
-    full_image_elem = browser.find_by_id('full_image')
-    full_image_elem.click()
-
-    # Find the more info button and click that
-    browser.is_element_present_by_text('more info', wait_time=1)
-    more_info_elem = browser.find_link_by_partial_text('more info')
-    more_info_elem.click()
-
-
-    # Parse the resulting html with soup
-    html = browser.html
-    img_soup = BeautifulSoup(html, 'html.parser')
-    try:
-        # Find the relative image url
-        img_url_rel = img_soup.select_one('figure.lede a img').get("src")
-    
-    except AttributeError:
-        return None
-
-    # Use the base URL to create an absolute URL
-    img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
-    return img_url
-
-
 def mars_facts():
 
     try:
@@ -139,15 +110,51 @@ def mars_facts():
     
     return df.to_html()
 
- #### CHALLENGE#############   
+#### CHALLENGE#############
+
+def mars_hemispheres(browser):
+    # Visit URL
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    # Parse the resulting html with soup
+    html = browser.html
+    img_soup = BeautifulSoup(html, 'html.parser')
+
+    # Find each of the hemisphere image buttons
+    hemisphere_titles = img_soup.find_all('h3')
+
+    hemisphere_img_urls =[]
+    hemisphere_dict = []
+
+    # Find and click each of the hemisphere image buttons
+    for entry in range(4):
+        browser.find_by_tag('h3')[entry].click()
+        
+
+
+        # Parse the resulting html with soup
+        html = browser.html
+        hemisphere_img0 = BeautifulSoup(html, 'html.parser')
+        # Drill down through the tags
+        hemisphere_img1 = hemisphere_img0.find('ul')
+        hemisphere_img2 = hemisphere_img1.find('li')
+        hemisphere_img = hemisphere_img2.find('a')['href']
+
+        # Build image links list
+        hemisphere_img_urls.append(hemisphere_img)
+
+       # Click back to land on the main page with hemisphere buttons
+        browser.back()
+
+    #for entry in range(4):
+    hemisphere_dict=[{'title':hemisphere_titles[entry].text, 'img_url':hemisphere_img_urls[entry]} for entry in range(4)] 
+    
+    return hemisphere_dict
 
 
 
+if __name__ == "__main__":
+    # If running as script, print scraped data
+    print(scrape_all())
 
-
-
-    if __name__ == "__main__":
-        # If running as script, print scraped data
-        print(scrape_all())
-
-browser.quit()
